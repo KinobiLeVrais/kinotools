@@ -2,6 +2,9 @@
 
 import os
 from urllib import request,parse
+import ipfinder
+import requests, re, json
+from terminaltables import SingleTable
 import urllib
 import time
 from termcolor import colored
@@ -28,20 +31,34 @@ def webhook():
   print(colored("  \ \  /\  / /___ | |__  | |__| |  ___    ___  | | __", 'green'))
   print(colored("   \ \/  \/ // _ \| '_ \ |  __  | / _ \  / _ \ | |/ /", 'green'))
   print(colored("    \  /\  /|  __/| |_) || |  | || (_) || (_) ||   < ", 'green'))
-  print(colored("     \/  \/  \___||_.__/ |_|  |_| \___/  \___/ |_|\_|", 'green'))
+  print(colored("     \/  \/  \___||_.__/ |_|  |_| \___/  \___/ |_|\_\ ", 'green'))
 
+def iplocalisatorstyle():
+  print(colored("  _____  _____    _                     _  _              _                     ", 'green'))
+  print(colored(" |_   _||  __ \  | |                   | |(_)            | |                    ", 'green'))
+  print(colored("   | |  | |__) | | |  ___    ___  __ _ | | _  ___   __ _ | |_  ___  _   _  _ __ ", 'green'))
+  print(colored("   | |  |  ___/  | | / _ \  / __|/ _` || || |/ __| / _` || __|/ _ \| | | || '__|", 'green'))
+  print(colored("  _| |_ | |      | || (_) || (__| (_| || || |\__ \| (_| || |_|  __/| |_| || |   ", 'green'))
+  print(colored(" |_____||_|      |_| \___/  \___|\__,_||_||_||___/ \__,_| \__|\___| \__,_||_|   ", 'green'))
+  print("\n\n")
 
 
 def main():
     clear()
     kinotools()
-    n = input("[1] WebHook Discord \n[2] SOON... \n[3] SOON... \n\n[x] Quitter \n\nChoisis une fonction : \n\n")
+    n = input("[1] WebHook Discord \n[2] Localiser IP \n[3] SOON... \n\n[x] Quitter \n\nChoisis une fonction : \n\n")
     if n == "1":
         clear()
         webhook()
         discord1()
 
+    if n == "2":
+        clear()
+        iplocalisatorstyle()
+        iplocalisator()
+
     if n == "x":
+      print("\nA bientot !\n")
       exit
 
     else:
@@ -85,6 +102,59 @@ def deleterequest(url):
 	req = request.Request(url,headers=headers,method="DELETE")
 	request.urlopen(req)
 """FONCTION N°1"""
+
+"""FONCTION N°2"""
+def iplocalisator():
+  ip = input(" Adresse IP: ")
+  print("\n Localisation en cours '%s'..." % (ip))
+
+  TABLE_DATA = []
+
+  url = "http://ip-api.com/json/"
+  data = requests.get(url+ip).content.decode('utf-8')
+  values = json.loads(data)
+
+  status = values['status']
+
+  if status != "success":
+    print("\n Adresse IP invalide.")
+    time.sleep(3)
+    main()
+
+  else:
+    infos = ("IP", ip)
+    TABLE_DATA.append(infos)
+    infos = ("ISP", values['isp'])
+    TABLE_DATA.append(infos)
+    infos = ("Organisation", values['org'])
+    TABLE_DATA.append(infos)
+    infos = ("Pays", values['country'])
+    TABLE_DATA.append(infos)
+    infos = ("Region", values['regionName'])
+    TABLE_DATA.append(infos)
+    infos = ("Ville", values['city'])
+    TABLE_DATA.append(infos)
+    infos = ("Code Postal", values['zip'])
+    TABLE_DATA.append(infos)
+    localisation = str(values['lat'])+', '+str(values['lon'])
+    infos = ("Localisation", localisation)
+    TABLE_DATA.append(infos)
+    infos = ("Maps", "https://www.google.fr/maps?q="+localisation)
+    TABLE_DATA.append(infos)
+
+    table = SingleTable(TABLE_DATA, ip)
+    print("\n"+table.table)
+    time.sleep(3)
+    e = input("\n Appuie sur entrer pour revenir au menu")
+    if e == "":
+      main()
+    else:
+      exit
+
+"""FONCTION N°2"""
+
+
+
 
 if __name__ == "__main__":
     main()
