@@ -4,7 +4,6 @@ import os
 from urllib import request,parse
 import ipfinder
 import requests, re, json
-from terminaltables import SingleTable
 import urllib
 import time
 from termcolor import colored
@@ -58,6 +57,7 @@ def main():
         iplocalisator()
 
     if n == "x":
+      clear()
       print("\nA bientot !\n")
       exit
 
@@ -108,8 +108,6 @@ def iplocalisator():
   ip = input(" Adresse IP: ")
   print("\n Localisation en cours '%s'..." % (ip))
 
-  TABLE_DATA = []
-
   url = "http://ip-api.com/json/"
   data = requests.get(url+ip).content.decode('utf-8')
   values = json.loads(data)
@@ -122,25 +120,25 @@ def iplocalisator():
     main()
 
   else:
-    infos = ("IP", ip)
-    TABLE_DATA.append(infos)
-    infos = ("ISP", values['isp'])
-    TABLE_DATA.append(infos)
-    infos = ("Organisation", values['org'])
-    TABLE_DATA.append(infos)
-    infos = ("Pays", values['country'])
-    TABLE_DATA.append(infos)
-    infos = ("Region", values['regionName'])
-    TABLE_DATA.append(infos)
-    infos = ("Ville", values['city'])
-    TABLE_DATA.append(infos)
-    infos = ("Code Postal", values['zip'])
-    TABLE_DATA.append(infos)
+    print("\n\n\n"+ip)
+    print("├──Isp")
+    print("│  └──"+values['isp'])
+    print("├──Org")
+    print("│  └──"+values['isp'])
+    print("├──Pays")
+    print("│  └──"+values['country'])
+    print("├──Region")
+    print("│  └──"+values['regionName'])
+    print("├──Ville")
+    print("│  └──"+values['city'])
+    print("├──Code Postal")
+    print("│  └──"+values['zip'])
     localisation = str(values['lat'])+', '+str(values['lon'])
-    infos = ("Localisation", localisation)
-    TABLE_DATA.append(infos)
+    print("└──Localisation")
+    print("   └──"+localisation)
+
     infos = ("Maps", "https://www.google.fr/maps?q="+localisation)
-    TABLE_DATA.append(infos)
+
 
     table = SingleTable(TABLE_DATA, ip)
     print("\n"+table.table)
