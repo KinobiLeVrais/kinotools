@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from hashlib import sha256
 import os
 from urllib import request,parse
 import ipfinder
@@ -10,8 +11,6 @@ from termcolor import colored
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
-
-
 def kinotools():
     print(" ")
     print(" ")
@@ -23,7 +22,6 @@ def kinotools():
     print(colored("                 |_|\_\|_||_| |_| \___/ |_| \___/  \___/ |_||___/", 'green'))
     print(colored("By Kinobi", 'grey'))
     print(" ")
-
 def webhook():
   print(colored(" __          __    _      _    _                _    ", 'green'))
   print(colored(" \ \        / /   | |    | |  | |              | |   ", 'green'))
@@ -31,7 +29,6 @@ def webhook():
   print(colored("   \ \/  \/ // _ \| '_ \ |  __  | / _ \  / _ \ | |/ /", 'green'))
   print(colored("    \  /\  /|  __/| |_) || |  | || (_) || (_) ||   < ", 'green'))
   print(colored("     \/  \/  \___||_.__/ |_|  |_| \___/  \___/ |_|\_\ ", 'green'))
-
 def iplocalisatorstyle():
   print(colored("  _____  _____    _                     _  _              _                     ", 'green'))
   print(colored(" |_   _||  __ \  | |                   | |(_)            | |                    ", 'green'))
@@ -40,12 +37,35 @@ def iplocalisatorstyle():
   print(colored("  _| |_ | |      | || (_) || (__| (_| || || |\__ \| (_| || |_|  __/| |_| || |   ", 'green'))
   print(colored(" |_____||_|      |_| \___/  \___|\__,_||_||_||___/ \__,_| \__|\___| \__,_||_|   ", 'green'))
   print("\n\n")
+def chiffrementstyle():
+  print(colored("        _      _   __   __                                     _   ", 'green'))
+  print(colored("       | |    (_) / _| / _|                                   | |  ", 'green'))
+  print(colored("   ___ | |__   _ | |_ | |_  _ __  ___  _ __ ___    ___  _ __  | |_ ", 'green'))
+  print(colored("  / __|| '_ \ | ||  _||  _|| '__|/ _ \| '_ ` _ \  / _ \| '_ \ | __|", 'green'))
+  print(colored(" | (__ | | | || || |  | |  | |  |  __/| | | | | ||  __/| | | || |_ ", 'green'))
+  print(colored("  \___||_| |_||_||_|  |_|  |_|   \___||_| |_| |_| \___||_| |_| \__|", 'green'))
 
+  print(colored("        _   ", 'green'))
+  print(colored("       | |  ", 'green'))
+  print(colored("   ___ | |_ ", 'green'))
+  print(colored("  / _ \| __|", 'green'))
+  print(colored(" |  __/| |_ ", 'green'))
+  print(colored("  \___| \__|", 'green'))
+
+  print(colored("      _              _      _   __   __                                     _   ", 'green'))
+  print(colored("     | |            | |    (_) / _| / _|                                   | |  ", 'green'))
+  print(colored("   __| |  ___   ___ | |__   _ | |_ | |_  _ __  ___  _ __ ___    ___  _ __  | |_ ", 'green'))
+  print(colored("  / _` | / _ \ / __|| '_ \ | ||  _||  _|| '__|/ _ \| '_ ` _ \  / _ \| '_ \ | __|", 'green'))
+  print(colored(" | (_| ||  __/| (__ | | | || || |  | |  | |  |  __/| | | | | ||  __/| | | || |_ ", 'green'))
+  print(colored("  \__,_| \___| \___||_| |_||_||_|  |_|  |_|   \___||_| |_| |_| \___||_| |_| \__|", 'green'))
+
+  print(colored("\nAvec XOR sous SHA256", 'grey'))
 
 def main():
     clear()
     kinotools()
-    n = input("[1] WebHook Discord \n[2] Localiser IP \n[3] SOON... \n\n[x] Quitter \n\nChoisis une fonction : \n\n")
+    print("[1] WebHook Discord \n[2] Localiser IP \n[3] Chiffrement/dechiffrement \n\n[x] Quitter \n\n")
+    n = input("Choisis une fonction : \n\n")
     if n == "1":
         clear()
         webhook()
@@ -55,6 +75,11 @@ def main():
         clear()
         iplocalisatorstyle()
         iplocalisator()
+
+    if n == "3":
+        clear()
+        chiffrementstyle()
+        chiffrement()
 
     if n == "x":
       clear()
@@ -137,22 +162,36 @@ def iplocalisator():
     print("└──Localisation")
     print("   └──"+localisation)
 
-    infos = ("Maps", "https://www.google.fr/maps?q="+localisation)
-
-
-    table = SingleTable(TABLE_DATA, ip)
-    print("\n"+table.table)
     time.sleep(3)
     e = input("\n Appuie sur entrer pour revenir au menu")
     if e == "":
       main()
     else:
       exit
-
 """FONCTION N°2"""
 
-
-
+"""FONCTION N°3"""
+def chiffrement():
+  print("")
+  print("")
+  entree = input("\nentrez le nom du fichiez a chiffrer/déchiffrer : \n\n")
+  sortie = input("\nentrez le nom du fichier de sortie : \n\n")
+  key = input("\nentrez la clé : \n\n")
+  keys = sha256(key.encode('utf-8')).digest()
+  with open(entree, 'rb') as f_entree:
+    with open(sortie, 'wb') as f_sortie:
+  	  i = 0
+  	  while f_entree.peek():
+  	    c = ord(f_entree.read(1))
+  	    j = i % len(keys)
+  	    b = bytes([c^keys[j]])
+  	    f_sortie.write(b)
+  	    i = i + 1
+  print(colored("fichier chiffré/dechiffré avec succes !", "green"))
+  time.sleep(3)
+  clear()
+  main()
+"""FONCTION N°3"""
 
 if __name__ == "__main__":
     main()
